@@ -120,7 +120,8 @@ function trackProgress() {
 function updateProgress() {
     const total = currentQuizList.length || 1;
     const percent = (answeredCount / total) * 100;
-    document.getElementById('progress-fill').style.width = `${percent}%`;
+    const fill = document.getElementById('progress-fill');
+    if (fill) fill.style.width = `${percent}%`;
 }
 
 function submitQuiz() {
@@ -129,7 +130,8 @@ function submitQuiz() {
     wrongQuestionsQueue = [];
 
     currentQuizList.forEach(q => {
-        const correctAns = answersData[q.id.toString()];
+        // Correct answer index from answersData
+        const correctIdx = answersData[q.id.toString()];
         const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
         const hint = document.getElementById(`hint-${q.id}`);
         
@@ -142,22 +144,26 @@ function submitQuiz() {
         let isCorrect = false;
         if (selected) {
             const val = parseInt(selected.value);
-            if (val === correctAns) {
+            if (val === correctIdx) {
                 score++;
                 isCorrect = true;
-                document.getElementById(`label-${q.id}-${val}`).classList.add('correct');
+                const selectedLbl = document.getElementById(`label-${q.id}-${val}`);
+                if (selectedLbl) selectedLbl.classList.add('correct');
             } else {
-                document.getElementById(`label-${q.id}-${val}`).classList.add('wrong');
+                const selectedLbl = document.getElementById(`label-${q.id}-${val}`);
+                if (selectedLbl) selectedLbl.classList.add('wrong');
             }
         }
         
         if (!isCorrect) {
             wrongQuestionsQueue.push(q);
-            const correctLbl = document.getElementById(`label-${q.id}-${correctAns}`);
+            // Highlight the correct answer
+            const correctLbl = document.getElementById(`label-${q.id}-${correctIdx}`);
             if (correctLbl) correctLbl.classList.add('correct');
             
             hint.style.display = 'block';
-            const correctText = q.options[correctAns] || "（無效索引）";
+            // Get the text of the correct answer
+            const correctText = q.options[correctIdx] || "（無效索引，請檢查答案檔）";
             const statusText = selected ? "❌ 答錯了！" : "⚠️ 未作答。";
             hint.innerText = `${statusText} 正確答案是：${correctText}`;
         }
@@ -177,7 +183,6 @@ function displayResults(score, total) {
         retryBtn.style.display = 'inline-block';
         retryBtn.innerText = `練習錯題 (共 ${wrongQuestionsQueue.length} 題)`;
         msg += `<p>還有 ${wrongQuestionsQueue.length} 題需要加強。</p>`;
-        // Save wrong questions to local storage for persistence
         saveWrongToStorage();
     } else {
         retryBtn.style.display = 'none';
@@ -195,8 +200,10 @@ function saveWrongToStorage() {
 
 function updateModeUI(text, className) {
     const indicator = document.getElementById('mode-indicator');
-    indicator.textContent = text;
-    indicator.className = `badge ${className}`;
+    if (indicator) {
+        indicator.textContent = text;
+        indicator.className = `badge ${className}`;
+    }
 }
 
 // Search Feature
