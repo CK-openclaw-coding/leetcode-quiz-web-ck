@@ -7,6 +7,7 @@ let answersData = {};
 let currentQuizList = [];
 let wrongQuestionsQueue = [];
 let answeredCount = 0;
+let isShuffleEnabled = false;
 
 // On Load
 document.addEventListener('DOMContentLoaded', () => {
@@ -73,14 +74,38 @@ function checkReady() {
     }
 }
 
+// Shuffle helper
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function toggleShuffle() {
+    isShuffleEnabled = !isShuffleEnabled;
+    const btn = document.getElementById('shuffle-toggle');
+    if (btn) {
+        btn.textContent = isShuffleEnabled ? "題庫亂序：開啟" : "題庫亂序：關閉";
+        btn.className = isShuffleEnabled ? "badge mode-practice" : "badge mode-normal";
+    }
+}
+
 // Quiz Core
 function initQuiz(type = 'all') {
     if (type === 'all') {
         currentQuizList = [...questionsData];
+        if (isShuffleEnabled) {
+            shuffleArray(currentQuizList);
+        }
         updateModeUI("全題庫模式", "mode-normal");
     } else if (type === 'wrong') {
         currentQuizList = [...wrongQuestionsQueue];
         wrongQuestionsQueue = [];
+        if (isShuffleEnabled) {
+            shuffleArray(currentQuizList);
+        }
         updateModeUI(`錯題練習模式 (${currentQuizList.length} 題)`, "mode-practice");
     }
 

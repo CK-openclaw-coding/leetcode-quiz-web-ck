@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON 刷題系統 (優化版)</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .badge.mode-practice { background-color: #e67e22; }
+        .badge.mode-normal { background-color: #3498db; }
+        #shuffle-toggle { cursor: pointer; transition: 0.3s; }
+        #shuffle-toggle:hover { opacity: 0.8; transform: scale(1.05); }
+    </style>
 </head>
 <body>
 
@@ -13,7 +19,7 @@
     <div class="container">
         <header>
             <h1>檔案載入刷題系統</h1>
-            <p>由 小高 (CK) 優化，支援自動載入與錯題記憶功能。</p>
+            <p>由 小高 (CK) 優化，支援自動載入、錯題記憶與題庫亂序功能。</p>
         </header>
 
         <!-- 上傳區域 -->
@@ -28,7 +34,9 @@
                 <input type="file" id="a-file" accept=".json" onchange="handleFiles('a', this)">
             </div>
             <div id="status-msg" class="status">等待載入檔案...</div>
-            <div style="margin-top: 20px;">
+            
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; align-items: center;">
+                <span id="shuffle-toggle" class="badge mode-normal" onclick="toggleShuffle()">題庫亂序：關閉</span>
                 <button id="start-btn" style="display:none;" onclick="initQuiz('all')">開始測驗</button>
             </div>
         </div>
@@ -58,6 +66,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=1776218290"></script>
+    <script src="script.js?v=1776220512"></script>
 </body>
 </html>
