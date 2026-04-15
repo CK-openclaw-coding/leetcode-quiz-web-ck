@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function autoLoadFiles() {
     try {
-        const qRes = await fetch('questions.json');
-        const aRes = await fetch('answers.json');
+        const qRes = await fetch('questions.json?v=1776217123);
+        const aRes = await fetch('answers.json?v=1776217123);
         
         if (qRes.ok && aRes.ok) {
             questionsData = await qRes.json();
