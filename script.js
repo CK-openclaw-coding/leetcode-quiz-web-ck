@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function autoLoadFiles() {
     try {
-        const qRes = await fetch('questions.json?v=1776217123);
-        const aRes = await fetch('answers.json?v=1776217123);
+        const v = new Date().getTime();
+        const qRes = await fetch(`questions.json?v=${v}`);
+        const aRes = await fetch(`answers.json?v=${v}`);
         
         if (qRes.ok && aRes.ok) {
             questionsData = await qRes.json();
@@ -36,8 +37,10 @@ async function autoLoadFiles() {
 
 function showStatus(msg, type) {
     const status = document.getElementById('status-msg');
-    status.textContent = msg;
-    status.className = `status ${type === 'ready' ? 'ready' : ''}`;
+    if (status) {
+        status.textContent = msg;
+        status.className = `status ${type === 'ready' ? 'ready' : ''}`;
+    }
 }
 
 // File Handlers
@@ -83,8 +86,10 @@ function initQuiz(type = 'all') {
 
     document.getElementById('upload-section').style.display = 'none';
     document.getElementById('quiz-area').style.display = 'block';
-    document.getElementById('score-board').style.display = 'none';
-    document.getElementById('btn-retry-wrong').style.display = 'none';
+    const board = document.getElementById('score-board');
+    if (board) board.style.display = 'none';
+    const retryBtn = document.getElementById('btn-retry-wrong');
+    if (retryBtn) retryBtn.style.display = 'none';
     
     answeredCount = 0;
     updateProgress();
@@ -94,6 +99,7 @@ function initQuiz(type = 'all') {
 
 function renderQuiz(list) {
     const container = document.getElementById('quiz-container');
+    if (!container) return;
     container.innerHTML = list.map(q => `
         <div class="card question-card" id="card-${q.id}">
             <div class="question-title">${q.id}. ${q.q}</div>
@@ -111,7 +117,6 @@ function renderQuiz(list) {
 }
 
 function trackProgress() {
-    const total = currentQuizList.length;
     const answered = document.querySelectorAll('input[type="radio"]:checked').length;
     answeredCount = answered;
     updateProgress();
@@ -130,7 +135,6 @@ function submitQuiz() {
     wrongQuestionsQueue = [];
 
     currentQuizList.forEach(q => {
-        // Correct answer index from answersData
         const correctIdx = answersData[q.id.toString()];
         const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
         const hint = document.getElementById(`hint-${q.id}`);
@@ -157,15 +161,15 @@ function submitQuiz() {
         
         if (!isCorrect) {
             wrongQuestionsQueue.push(q);
-            // Highlight the correct answer
             const correctLbl = document.getElementById(`label-${q.id}-${correctIdx}`);
             if (correctLbl) correctLbl.classList.add('correct');
             
-            hint.style.display = 'block';
-            // Get the text of the correct answer
-            const correctText = q.options[correctIdx] || "（無效索引，請檢查答案檔）";
-            const statusText = selected ? "❌ 答錯了！" : "⚠️ 未作答。";
-            hint.innerText = `${statusText} 正確答案是：${correctText}`;
+            if (hint) {
+                hint.style.display = 'block';
+                const correctText = q.options[correctIdx] || "（無效索引，請檢查答案檔）";
+                const statusText = selected ? "❌ 答錯了！" : "⚠️ 未作答。";
+                hint.innerText = `${statusText} 正確答案是：${correctText}`;
+            }
         }
     });
 
@@ -174,18 +178,21 @@ function submitQuiz() {
 
 function displayResults(score, total) {
     const board = document.getElementById('score-board');
+    if (!board) return;
     board.style.display = 'block';
     
     let msg = `<h3>測驗結束！得分：${score} / ${total}</h3>`;
     const retryBtn = document.getElementById('btn-retry-wrong');
     
     if (wrongQuestionsQueue.length > 0) {
-        retryBtn.style.display = 'inline-block';
-        retryBtn.innerText = `練習錯題 (共 ${wrongQuestionsQueue.length} 題)`;
+        if (retryBtn) {
+            retryBtn.style.display = 'inline-block';
+            retryBtn.innerText = `練習錯題 (共 ${wrongQuestionsQueue.length} 題)`;
+        }
         msg += `<p>還有 ${wrongQuestionsQueue.length} 題需要加強。</p>`;
         saveWrongToStorage();
     } else {
-        retryBtn.style.display = 'none';
+        if (retryBtn) retryBtn.style.display = 'none';
         msg += `<p>🎉 全部答對了！太厲害了！</p>`;
         localStorage.removeItem('wrongQueue');
     }
