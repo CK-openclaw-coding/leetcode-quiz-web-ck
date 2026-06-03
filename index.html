@@ -22,46 +22,24 @@
             <p>由 小高 (CK) 優化，支援自動載入、錯題記憶與題庫亂序功能。</p>
         </header>
 
-        <!-- 上傳區域 -->
-        <div class="card upload-section" id="upload-section">
-            <h3>選擇題庫或載入檔案</h3>
-            
-            <div class="upload-row">
-                <label>📚 選擇今日刷題主題：</label>
-                <select id="quiz-select" onchange="loadSelectedQuiz()">
-                    <option value="">-- 請選擇題庫 --</option>
-                </select>
-            </div>
-
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-            
-            <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">或是手動上傳自訂 JSON：</p>
-            
-            <div class="upload-row">
-                <label>1. 載入題目 (questions.json)：</label>
-                <input type="file" id="q-file" accept=".json" onchange="handleFiles('q', this)">
-            </div>
-            <div class="upload-row">
-                <label>2. 載入答案 (answers.json)：</label>
-                <input type="file" id="a-file" accept=".json" onchange="handleFiles('a', this)">
-            </div>
-            <div id="status-msg" class="status">等待載入檔案...</div>
-            
-            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; align-items: center;">
-                <span id="shuffle-toggle" class="badge mode-normal" onclick="toggleShuffle()">題庫亂序：關閉</span>
-                <button id="start-btn" style="display:none;" onclick="initQuiz('all')">開始測驗</button>
-            </div>
-        </div>
-
-        <!-- 測驗區域 -->
-        <div id="quiz-area" style="display: none;">
+        <!-- 測驗區域 (改為預設顯示，除非沒選題) -->
+        <div id="quiz-area" style="display: block;">
             <div class="progress-container">
-                <div style="text-align: center; margin-bottom: 10px;">
-                    <span id="mode-indicator" class="badge">載入中...</span>
+                <div style="text-align: center; margin-bottom: 15px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+                    <select id="quiz-select" class="quiz-select-main" onchange="loadSelectedQuiz()">
+                        <option value="">-- 請選擇今日主題 --</option>
+                    </select>
+                    <span id="mode-indicator" class="badge mode-normal">等待選題</span>
+                    <span id="shuffle-toggle" class="badge mode-normal" onclick="toggleShuffle()">🔀 亂序：關閉</span>
                 </div>
                 <div class="progress-bar">
                     <div id="progress-fill" class="progress-fill"></div>
                 </div>
+            </div>
+
+            <div id="start-section" style="text-align: center; margin: 40px 0;">
+                <p id="status-msg" style="color: #666;">請從上方選單選擇題庫以開始</p>
+                <button id="start-btn" style="display:none;" onclick="initQuiz('all')">開始測驗</button>
             </div>
 
             <input type="text" class="search-box" placeholder="🔍 搜尋題目關鍵字..." oninput="filterQuestions(this.value)">
@@ -73,9 +51,13 @@
             <div class="controls" style="margin-top: 40px; padding-bottom: 60px;">
                 <button class="btn-submit" onclick="submitQuiz()">交卷並查看分數</button>
                 <button id="btn-retry-wrong" class="warning" style="display: none;" onclick="initQuiz('wrong')">練習錯題</button>
-                <button class="secondary" onclick="location.reload()">重新開始 / 載入新檔</button>
+                <button class="secondary" onclick="location.reload()">回主選單</button>
             </div>
         </div>
+
+        <footer style="text-align: center; margin-top: 20px; padding: 20px; font-size: 0.8em; color: #999;">
+            <a href="manage.html" style="color: #999; text-decoration: none;">⚙️ 管理與上傳題庫</a>
+        </footer>
     </div>
 
     <script src="script.js?v=1776220512"></script>

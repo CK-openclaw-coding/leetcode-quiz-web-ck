@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>題庫管理中心</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ 題庫管理中心</h1>
+            <p><a href="index.html">⬅️ 返回刷題首頁</a></p>
+        </header>
+
+        <div class="card">
+            <h3>🧪 臨時測試區</h3>
+            <p style="font-size: 0.9em; color: #666;">你可以在這裡上傳 JSON 檔案直接開始測試，不會儲存到伺服器。</p>
+            <div class="upload-row">
+                <label>1. 載入題目 (JSON)：</label>
+                <input type="file" accept=".json" onchange="handleFiles('q', this)">
+            </div>
+            <div class="upload-row">
+                <label>2. 載入答案 (JSON)：</label>
+                <input type="file" accept=".json" onchange="handleFiles('a', this)">
+            </div>
+            <div id="status-msg" class="status">等待檔案...</div>
+            <button id="start-btn" style="display:none; margin-top:10px;" onclick="initQuiz('all')">立即測試</button>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+            <h3>永久新增題庫說明</h3>
+            <p>若要永久將題庫加入首頁清單，請遵循以下流程：</p>
+            <ol style="line-height: 1.8; color: #444;">
+                <li>將題目與答案 JSON 傳給 <b>小高 (CK)</b>。</li>
+                <li>我會自動執行 <b>索引轉換 (1-based 轉 0-based)</b> 並優化內容。</li>
+                <li>我會將檔案部署至 <code>quizzes/</code> 資料夾並更新 <code>quizzes.json</code>。</li>
+            </ol>
+            <p style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 0.85em;">
+                💡 <b>為什麼不直接在網頁上傳？</b><br>
+                為了安全考量，我們不在前端暴露 GitHub Token。透過小高處理可以確保資料格式正確（例如答案自動校正），且檔案能永久保存在 GitHub 儲存庫中。
+            </p>
+        </div>
+
+        <!-- 測驗區域 (僅供測試) -->
+        <div id="quiz-area" style="display: none; margin-top: 40px;">
+            <hr>
+            <div id="quiz-container"></div>
+            <div class="controls">
+                <button class="btn-submit" onclick="submitQuiz()">交卷測試</button>
+            </div>
+        </div>
+        <div id="score-board" class="score-board" style="display: none;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

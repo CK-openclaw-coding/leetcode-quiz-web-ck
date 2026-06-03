@@ -225,3 +225,19 @@ button.warning {
     align-items: center;
     justify-content: center;
 }
+
+.quiz-select-main {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 2px solid #3498db;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+
+[data-theme="dark"] .quiz-select-main {
+    background: #2c3e50;
+    color: white;
+    border-color: #2980b9;
+}
