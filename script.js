@@ -139,12 +139,15 @@ function initQuiz(type = 'all') {
         updateModeUI(`錯題練習模式 (${currentQuizList.length} 題)`, "mode-practice");
     }
 
-    document.getElementById('upload-section').style.display = 'none';
-    document.getElementById('quiz-area').style.display = 'block';
-    const board = document.getElementById('score-board');
-    if (board) board.style.display = 'none';
-    const retryBtn = document.getElementById('btn-retry-wrong');
-    if (retryBtn) retryBtn.style.display = 'none';
+    // UI State Management - Robust checks
+    const hideIds = ['upload-section', 'start-section', 'score-board', 'btn-retry-wrong'];
+    hideIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    const quizArea = document.getElementById('quiz-area');
+    if (quizArea) quizArea.style.display = 'block';
     
     answeredCount = 0;
     updateProgress();
