@@ -9,31 +9,61 @@ let wrongQuestionsQueue = [];
 let answeredCount = 0;
 let isShuffleEnabled = false;
 
+let quizzesManifest = [];
+
 // On Load
 document.addEventListener('DOMContentLoaded', () => {
-    // Try to auto-load default files
-    autoLoadFiles();
+    // Load quiz list
+    loadQuizManifest();
     
     // Theme setup
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 });
 
-async function autoLoadFiles() {
+async function loadQuizManifest() {
+    try {
+        const res = await fetch(`quizzes.json?v=${new Date().getTime()}`);
+        if (res.ok) {
+            quizzesManifest = await res.json();
+            const select = document.getElementById('quiz-select');
+            quizzesManifest.forEach(q => {
+                const opt = document.createElement('option');
+                opt.value = q.path;
+                opt.textContent = q.name;
+                select.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.log("Failed to load quiz manifest.");
+    }
+}
+
+async function loadSelectedQuiz() {
+    const path = document.getElementById('quiz-select').value;
+    if (!path) return;
+
+    showStatus("正在載入題庫...", "");
     try {
         const v = new Date().getTime();
-        const qRes = await fetch(`questions.json?v=${v}`);
-        const aRes = await fetch(`answers.json?v=${v}`);
+        const qRes = await fetch(`${path}/questions.json?v=${v}`);
+        const aRes = await fetch(`${path}/answers.json?v=${v}`);
         
         if (qRes.ok && aRes.ok) {
             questionsData = await qRes.json();
             answersData = await aRes.json();
-            showStatus("已自動從伺服器載入題目與答案！", "ready");
+            showStatus(`已載入「${quizzesManifest.find(q => q.path === path).name}」！`, "ready");
             document.getElementById('start-btn').style.display = "inline-block";
+        } else {
+            showStatus("載入失敗，請檢查路徑。", "error");
         }
     } catch (err) {
-        console.log("No default files found, waiting for manual upload.");
+        showStatus("網路錯誤，無法載入題庫。", "error");
     }
+}
+
+async function autoLoadFiles() {
+    // This is now handled by loadQuizManifest and user selection
 }
 
 function showStatus(msg, type) {

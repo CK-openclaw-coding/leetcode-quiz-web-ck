@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ml-100",
+    "name": "🤖 機器學習 100 題 (Logistic/SVM/NB)",
+    "path": "quizzes/ml-100"
+  },
+  {
+    "id": "python-basic",
+    "name": "🐍 Python 基礎與 GUI (Tkinter)",
+    "path": "quizzes/python-basic"
+  }
+]

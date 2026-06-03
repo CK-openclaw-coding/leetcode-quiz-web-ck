@@ -24,7 +24,19 @@
 
         <!-- 上傳區域 -->
         <div class="card upload-section" id="upload-section">
-            <h3>請載入題目與答案檔</h3>
+            <h3>選擇題庫或載入檔案</h3>
+            
+            <div class="upload-row">
+                <label>📚 選擇今日刷題主題：</label>
+                <select id="quiz-select" onchange="loadSelectedQuiz()">
+                    <option value="">-- 請選擇題庫 --</option>
+                </select>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+            
+            <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">或是手動上傳自訂 JSON：</p>
+            
             <div class="upload-row">
                 <label>1. 載入題目 (questions.json)：</label>
                 <input type="file" id="q-file" accept=".json" onchange="handleFiles('q', this)">
