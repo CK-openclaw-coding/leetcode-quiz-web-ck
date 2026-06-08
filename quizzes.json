@@ -8,5 +8,10 @@
     "id": "python-basic",
     "name": "🐍 Python 基礎與 GUI (Tkinter)",
     "path": "quizzes/python-basic"
+  },
+  {
+    "id": "8051-practice",
+    "name": "🚀 8051 單晶片全章節 (420題)",
+    "path": "quizzes/8051-practice"
   }
 ]
